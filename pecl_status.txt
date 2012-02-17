@@ -1,0 +1,214 @@
+Building pecl-mysqlnd_ms-1.2.2.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-mysqlnd_ms-1.1.2.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-mysqlnd_ms-1.1.1.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-apc-3.1.9-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: apc
+Building pecl-apc-3.1.9.ebuild
+  php5-3: OK
+  php5-4: Failed: apc
+Building pecl-apc-3.1.7.ebuild
+  php5-3: OK
+  php5-4: Failed: apc
+Building pecl-apc-3.1.9-r2.ebuild
+  php5-3: OK
+  php5-4: Failed: apc
+Building pecl-crack-0.4-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: crack
+Building pecl-uploadprogress-1.0.1-r1.ebuild
+  php5-3: Failed: uploadprogress-1.0.1
+  php5-4: Failed: uploadprogress-1.0.1
+Building pecl-uploadprogress-1.0.3.1.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-dio-0.0.4_rc4-r2.ebuild
+  php5-3: OK
+  php5-4: Failed: dio
+Building pecl-enchant-1.1.0-r2.ebuild
+  php5-3: Failed: enchant
+  php5-4: Failed: enchant
+
+--- Couldn't find '=pecl-enchant-1.1.0-r2' to unmerge.
+Building pecl-mogilefs-0.9.1.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-htscanner-1.0.0.ebuild
+  php5-3: Failed: htscanner
+  php5-4: Failed: htscanner
+Building pecl-libevent-0.0.4.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-geoip-1.0.8.ebuild
+  php5-3: OK
+  php5-4: Failed: geoip
+Building pecl-geoip-1.0.7-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: geoip
+Building pecl-id3-0.2-r2.ebuild
+  php5-3: OK
+  php5-4: Failed: id3
+Building pecl-oauth-1.2.2.ebuild
+  php5-3: OK
+  php5-4: Failed: oauth
+Building pecl-gearman-1.0.1.ebuild
+  php5-3: Failed: gearman
+  php5-4: Failed: gearman
+
+--- Couldn't find '=pecl-gearman-1.0.1' to unmerge.
+Building pecl-gearman-0.8.0.ebuild
+  php5-3: OK
+  php5-4: Failed: gearman
+Building pecl-ps-1.3.6-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: ps
+Building pecl-mongo-1.2.0.ebuild
+  php5-3: OK
+  php5-4: Failed: mongo
+Building pecl-mongo-1.1.4.ebuild
+  php5-3: OK
+  php5-4: Failed: mongo
+Building pecl-mongo-1.2.7.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-mongo-1.2.4.ebuild
+  php5-3: OK
+  php5-4: Failed: mongo
+Building pecl-mongo-1.1.3.ebuild
+  php5-3: OK
+  php5-4: Failed: mongo
+Building pecl-pam-1.0.2-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: pam
+Building pecl-svn-1.0.0-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: svn
+Building pecl-haru-1.0.0-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: haru
+Building pecl-haru-1.0.3.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-imagick-3.0.1-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: imagick
+Building pecl-imagick-3.0.0-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: imagick
+Building pecl-memcached-2.0.0_beta2.ebuild
+  php5-3: OK
+  php5-4: Failed: memcached
+Building pecl-memcached-1.0.2-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: memcached
+Building pecl-uuid-1.0.2.ebuild
+  php5-3: OK
+  php5-4: Failed: uuid
+Building pecl-translit-0.6.0-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: translit
+Building pecl-gnupg-1.3.2-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: gnupg
+Building pecl-timezonedb-2011.14.ebuild
+  php5-3: OK
+  php5-4: Failed: timezonedb
+Building pecl-timezonedb-2011.13.ebuild
+  php5-3: OK
+  php5-4: Failed: timezonedb
+Building pecl-dbx-1.1.2.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-ssh2-0.11.2-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: ssh2
+Building pecl-ssh2-0.11.3.ebuild
+  php5-3: OK
+  php5-4: Failed: ssh2
+Building pecl-cairo-0.2.0-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: cairo
+Building pecl-mcve-7.0.3-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: mcve
+Building pecl-syck-0.9.3-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: syck
+Building pecl-memcache-3.0.5-r2.ebuild
+  php5-3: OK
+  php5-4: Failed: memcache
+Building pecl-memcache-3.0.5-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: memcache
+Building pecl-memcache-2.2.6-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: memcache
+Building pecl-memcache-3.0.6-r1.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-memcache-3.0.6.ebuild
+  php5-3: OK
+  php5-4: Failed: memcache
+Building pecl-mailparse-2.1.5-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: mailparse
+Building pecl-lzf-1.5.2-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: lzf
+Building pecl-bbcode-1.0.3_beta1.ebuild
+  php5-3: OK
+  php5-4: OK
+Building pecl-stomp-1.0.3.ebuild
+  php5-3: OK
+  php5-4: Failed: stomp
+Building pecl-idn-0.2.0-r1.ebuild
+PHP Warning:  Function registration failed - duplicate name - idn_to_ascii in Unknown on line 0
+
+Warning: Function registration failed - duplicate name - idn_to_ascii in Unknown on line 0
+PHP Warning:  Function registration failed - duplicate name - idn_to_utf8 in Unknown on line 0
+
+Warning: Function registration failed - duplicate name - idn_to_utf8 in Unknown on line 0
+PHP Warning:  idn: Unable to register functions, unable to load in Unknown on line 0
+
+Warning: idn: Unable to register functions, unable to load in Unknown on line 0
+  php5-3: Failed: idn
+  php5-4: Failed: idn
+Building pecl-yaz-1.0.14-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: yaz
+Building pecl-yaz-1.1.1.ebuild
+  php5-3: OK
+  php5-4: Failed: yaz
+Building pecl-drizzle-0.4.2-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: drizzle
+Building pecl-sca_sdo-1.2.4-r2.ebuild
+  php5-3: OK
+  php5-4: Failed: sdo
+Building pecl-mysqlnd_qc-1.0.1.ebuild
+  php5-3: OK
+  php5-4: Failed: mysqlnd_qc
+Building pecl-http-1.7.1.ebuild
+  php5-3: OK
+  php5-4: Failed: http
+Building pecl-http-1.7.0-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: http
+Building pecl-yaml-1.0.1.ebuild
+  php5-3: OK
+  php5-4: Failed: yaml
+Building pecl-xdiff-1.5.1-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: xdiff
+Building pecl-radius-1.2.5-r1.ebuild
+  php5-3: OK
+  php5-4: Failed: radius
+Building pecl-ncurses-1.0.1.ebuild
+  php5-3: OK
+  php5-4: Failed: ncurses

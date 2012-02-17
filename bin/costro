@@ -1,0 +1,370 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Costro 
+ * 
+ * @package 
+ * @version $id$
+ * @copyright Jamie Learmonth
+ * @author Jamie Learmonth <jamie-lists@boxlightmedia.com> 
+ * @license See LICENSE
+ */
+namespace Costro;
+
+if (!('0' == trim(shell_exec('id -u')))) {
+  die('Only root can run these tests' . PHP_EOL);
+}
+
+define('PORTAGE_DIR', '/usr/portage');
+define('PHP_CATEGORY', 'dev-php');
+
+require_once 'Symfony/Component/ClassLoader/UniversalClassLoader.php';
+
+use Symfony\Component\ClassLoader\UniversalClassLoader;
+
+$loader = new UniversalClassLoader();
+$loader->register();
+$loader->registerNamespace('Symfony', '/usr/share/php');
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Finder\Finder;
+
+$console = new Application('costro', '0.1');
+$console
+    ->register('run')
+    ->setDefinition(array(
+      new InputOption('ebuild', 'e', InputOption::VALUE_OPTIONAL, 'Run a single ebuild')
+    ))
+    ->setCode(function(InputInterface $input, OutputInterface $output) {
+      $runner = new Runner($input, $output);
+      $runner->run();
+    })
+    ->setDescription(<<<DEF
+Builds all pecl packages in the portage tree against available slots.
+DEF
+);
+
+$console->run();
+
+/**
+ * Runner 
+ * 
+ * @package 
+ * @version $id$
+ * @copyright Jamie Learmonth
+ * @author Jamie Learmonth <jamie-lists@boxlightmedia.com> 
+ * @license See LICENSE
+ */
+class Runner
+{
+    private
+        $input,
+        $output;
+
+    /**
+     * __construct 
+     * 
+     * @param InputInterface $input 
+     * @param OutputInterface $output 
+     * @access public
+     * @return void
+     */
+    public function __construct(InputInterface $input, OutputInterface $output)
+    {
+        $this->input  = $input;
+        $this->output = $output;
+    }
+
+    /**
+     * getPackages 
+     * 
+     * @access public
+     * @return Array \SplFileInfo
+     */
+    public function getEbuilds()
+    {
+        $finder = new Finder();
+
+        if ($this->input->getOption('ebuild')) {
+            $pattern = $this->input->getOption('ebuild') . '-*.ebuild';
+        } else {
+            $pattern = 'pecl-*.ebuild';
+        }
+
+        return $finder->files()->in(\PORTAGE_DIR . \DIRECTORY_SEPARATOR . \PHP_CATEGORY)->name($pattern);
+    }
+
+    /**
+     * getAvailableSlots 
+     * 
+     * Returns a list of slots which are being tested
+     *
+     * @todo   Get this from the system
+     * @access public
+     * @return void
+     */
+    public function getAvailableSlots()
+    {
+        return array(
+            'php5-3',
+            'php5-4'
+        );
+    }
+    
+    /**
+     * run 
+     * 
+     * Builds and tests each pecl ebuild against each slot and returns the
+     * output. Currently only supports CLI OutputInterface
+     *
+     * @access public
+     * @return void
+     */
+    public function run()
+    {
+        foreach ($this->getEbuilds() as $ebuild) {
+
+          $this->output->writeln('Building ' . $ebuild->getFilename());
+
+          $package = new Package($ebuild, 0, -7);
+          $package->build();
+
+          if (!$package->hasErrors())
+          {
+            $package->test();
+          }
+
+          foreach ($this->getAvailableSlots() as $slot) {
+              $output = '';
+              if (!$package->hasSlot($slot)) {
+                  $output = 'Skipped';
+              } elseif ($package->hasError($slot)) {
+                  $output = $package->getError($slot);
+              } else {
+                  $output = 'OK';
+              }
+              
+            $this->output->writeLn("\t$slot: " . $output);
+          }
+
+          $package->cleanup();
+        }
+    }
+}
+
+/**
+ * Package 
+ * 
+ * @package 
+ * @version $id$
+ * @copyright Jamie Learmonth
+ * @author Jamie Learmonth <jamie-lists@boxlightmedia.com> 
+ * @license See LICENSE
+ */
+class Package
+{
+    private
+      $testFile,
+      $ebuild,
+      $ebuildContents,
+      $errors = array(),
+      $slots  = array(),
+      $defaultSlots = array('php5-3', 'php5-4'),
+      $sapis = array('cli', 'fpm', 'apache2');
+
+    /**
+     * __construct 
+     * 
+     * @param \SplFileInfo $ebuild 
+     * @access public
+     * @return void
+     */
+    public function __construct(\SplFileInfo $ebuild)
+    {
+      $this->ebuild = $ebuild;
+      $this->ebuildContents = file_get_contents($ebuild->getRealPath());
+      $this->initialise();
+    }
+
+    /**
+     * initialise 
+     * 
+     * Gathers information about the ebuild required to execute builds
+     *
+     * @access public
+     * @return void
+     */
+    public function initialise()
+    {
+        if (preg_match('/USE_PHP="(.*)"/', $this->ebuildContents, $slots)) {
+            if (!isset($slots[1])) {
+                throw new \Exception('Invalid USE_PHP line in ebuild');
+            }
+
+            foreach (explode(' ', $slots[1]) as $slot) {
+                if (in_array($slot, $this->defaultSlots)) {
+                    $this->slots[] = $slot;
+                } else {
+                    throw new \Exception(sprintf('Unknown slot in USE_PHP %s', $slot));
+                }
+            }
+        } else {
+            // Add USE_PHP to force build for all slots  
+            $this->slots = $this->defaultSlots;
+        }
+    }
+    
+    /**
+     * getSlots 
+     * 
+     * @access public
+     * @return array
+     */
+    public function getSlots()
+    {
+         return $this->slots;
+    }
+
+    /**
+     * hasSlot 
+     * 
+     * @param string $slot 
+     * @access public
+     * @return bool
+     */
+    public function hasSlot($slot)
+    {
+        return in_array($slot, $this->slots);
+    }
+
+    /**
+     * getError 
+     * 
+     * @param string $slot 
+     * @access public
+     * @return string A textual representation of the error
+     */
+    public function getError($slot)
+    {
+        return isset($this->errors[$slot]) ? $this->errors[$slot] : null;
+    }
+
+    /**
+     * hasError 
+     * 
+     * @param string $slot 
+     * @access public
+     * @return bool
+     */
+    public function hasError($slot)
+    {
+        return isset($this->errors[$slot]); 
+    }
+
+    /**
+     * hasErrors 
+     * 
+     * @access public
+     * @return bool
+     */
+    public function hasErrors()
+    {
+        return (!empty($this->errors));
+    }
+
+    /**
+     * getPackageName 
+     * 
+     * Extracts the name of the pecl package from the filename
+     *
+     * @access public
+     * @return string
+     */
+    public function getPackageName()
+    {
+        return substr($this->ebuild->getFilename(), 0, -7);
+    }
+
+    /**
+     * getExtensionName 
+     * 
+     * Returns the name of the extension being built
+     * 
+     * @access public
+     * @return string
+     */
+    public function getExtensionName()
+    {
+      preg_match('/PHP_EXT_NAME="(.*)"/', $this->ebuildContents, $name);
+
+      // Fall back to name
+      if (!isset($name[1])) {
+          preg_match('/pecl-(.*)-/', $this->ebuild->getFilename(), $name);
+      }
+    
+      if (!isset($name[1])) {
+        throw new \Exception('Unable to determine extension name');
+      }
+
+      return $name[1];
+    }
+
+    /**
+     * build 
+     * 
+     * Emerges the package onto the system
+     *
+     * @access public
+     * @return void
+     */
+    public function build()
+    {
+        shell_exec("emerge -1 =" . $this->getPackageName());          
+    }
+
+    /**
+     * test 
+     * 
+     * Tests to see if the extension is working post build
+     *
+     * @todo Test cgi, fpm and apache2
+     * @access public
+     * @return void
+     */
+    public function test()
+    {
+        foreach ($this->getSlots() as $slot) {
+            shell_exec('eselect php set cli ' . str_replace('-', '.', $slot));    
+            $tmpName = sys_get_temp_dir() . DIRECTORY_SEPARATOR . $this->getPackageName() . $slot . '.php';
+            if (!$fp = fopen($tmpName, 'w+')) {
+                throw new Exception(sprintf('Error creating temporary file for testing (%s)', $tmpName));
+            }
+            fwrite($fp, sprintf('<?php var_dump(extension_loaded(\'%s\')); ?>', $this->getExtensionName()));
+            if (!('bool(true)' === trim(shell_exec('php ' . $tmpName)))) {
+                $this->errors[$slot] = sprintf('Failed: %s', $this->getExtensionName());
+            }
+            fclose($fp);
+            unlink($tmpName);
+        }
+    }
+
+    /**
+     * cleanup 
+     * 
+     * Cleans up the stuff we left behind and set differently
+     *
+     * @access public
+     * @return void
+     */
+    public function cleanup()
+    {
+        foreach ($this->sapis as $sapi) {
+            shell_exec(sprintf('eselect php set %s %s', $sapi, str_replace('-', '.', $this->slots[0])));
+        }
+        shell_exec('emerge --unmerge --quiet =' . $this->getPackageName());
+    }
+}
